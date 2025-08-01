@@ -305,30 +305,15 @@
         
         <div class="tab-section">
             <div class="tabs">
-                <div class="tab active" data-tab="upload">Cargar Datos</div>
-                <div class="tab" data-tab="search">Buscar Clientes</div>
+                <div class="tab active" data-tab="search">Buscar Asociado</div>
+                <div class="tab" data-tab="upload">Cargar Datos</div>
             </div>
             
-            <div id="uploadTab" class="tab-content active">
-                <div class="upload-section">
-                    <h2>Cargar Archivo Excel <span id="statusIndicator" class="status-indicator status-red"></span></h2>
-                    <input type="file" id="excelFile" accept=".xlsx, .xls">
-                    <button id="uploadBtn">Cargar Datos</button>
-                    <button id="clearBtn" class="clear-btn" disabled>Limpiar Datos</button>
-                    <div id="uploadMessage" class="message"></div>
-                    <div id="fileInfo" class="message info" style="display: none;"></div>
-                    <div class="file-actions">
-                        <button id="exportBtn" disabled>Exportar a Excel</button>
-                        <button id="saveBackupBtn" disabled>Guardar Backup</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="searchTab" class="tab-content">
+            <div id="searchTab" class="tab-content active">
                 <div class="search-section">
-                    <h2>Buscar Cliente</h2>
+                    <h2>Buscar Asociado</h2>
                     <div class="search-container">
-                        <input type="text" id="searchInput" placeholder="Escriba el nombre del cliente...">
+                        <input type="text" id="searchInput" placeholder="Escriba el nombre del asociado...">
                         <button id="showAllBtn">Mostrar Todos</button>
                     </div>
                     <div id="searchMessage" class="message"></div>
@@ -353,6 +338,21 @@
                                 <!-- Los datos se cargarán aquí -->
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="uploadTab" class="tab-content">
+                <div class="upload-section">
+                    <h2>Cargar Archivo Excel <span id="statusIndicator" class="status-indicator status-red"></span></h2>
+                    <input type="file" id="excelFile" accept=".xlsx, .xls">
+                    <button id="uploadBtn">Cargar Datos</button>
+                    <button id="clearBtn" class="clear-btn" disabled>Limpiar Datos</button>
+                    <div id="uploadMessage" class="message"></div>
+                    <div id="fileInfo" class="message info" style="display: none;"></div>
+                    <div class="file-actions">
+                        <button id="exportBtn" disabled>Exportar a Excel</button>
+                        <button id="saveBackupBtn" disabled>Guardar Backup</button>
                     </div>
                 </div>
             </div>
