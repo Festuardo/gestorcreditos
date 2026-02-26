@@ -6,17 +6,25 @@
     <title>Gestor de Créditos</title>
     <style>
         :root {
-            --primary-color: #4CAF50;
-            --primary-hover: #45a049;
-            --secondary-color: #2196F3;
-            --secondary-hover: #0b7dda;
-            --danger-color: #f44336;
-            --danger-hover: #d32f2f;
-            --border-color: #ddd;
-            --light-bg: #f5f5f5;
-            --table-header-bg: #f2f2f2;
-            --table-row-even: #f9f9f9;
-            --table-row-hover: #f1f1f1;
+            --primary-color: #4361ee;
+            --primary-hover: #3a56d4;
+            --secondary-color: #f72585;
+            --secondary-hover: #e01e7a;
+            --danger-color: #d00000;
+            --danger-hover: #b00000;
+            --border-color: #ced4da;
+            --light-bg: #f8f9fa;
+            --table-header-bg: #e9ecef;
+            --table-row-even: #f8f9fa;
+            --table-row-hover: #e2e6ea;
+            --success-bg: #d1e7dd;
+            --success-text: #0f5132;
+            --error-bg: #f8d7da;
+            --error-text: #842029;
+            --info-bg: #cff4fc;
+            --info-text: #055160;
+            --loading-bg: #fff3cd;
+            --loading-text: #664d03;
         }
         
         body {
@@ -27,7 +35,7 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background-color: white;
             padding: 20px;
@@ -154,7 +162,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 600px;
+            min-width: 900px; /* Ajustado para más columnas */
         }
         
         th, td {
@@ -185,27 +193,27 @@
         }
         
         .success {
-            background-color: #dff0d8;
-            color: #3c763d;
-            border: 1px solid #d6e9c6;
+            background-color: var(--success-bg);
+            color: var(--success-text);
+            border: 1px solid #badbcc;
         }
         
         .error {
-            background-color: #f2dede;
-            color: #a94442;
-            border: 1px solid #ebccd1;
+            background-color: var(--error-bg);
+            color: var(--error-text);
+            border: 1px solid #f5c2c7;
         }
         
         .info {
-            background-color: #d9edf7;
-            color: #31708f;
-            border: 1px solid #bce8f1;
+            background-color: var(--info-bg);
+            color: var(--info-text);
+            border: 1px solid #9eeaf9;
         }
         
         .loading {
-            background-color: #fcf8e3;
-            color: #8a6d3b;
-            border: 1px solid #faebcc;
+            background-color: var(--loading-bg);
+            color: var(--loading-text);
+            border: 1px solid #ffecb5;
         }
         
         .status-indicator {
@@ -217,11 +225,11 @@
         }
         
         .status-green {
-            background-color: #5cb85c;
+            background-color: #28a745;
         }
         
         .status-red {
-            background-color: #d9534f;
+            background-color: #dc3545;
         }
         
         .file-actions {
@@ -330,6 +338,8 @@
                                     <th>NOMBRE</th>
                                     <th>CRÉDITO</th>
                                     <th>MONTO ORIGINAL (Q)</th>
+                                    <th>SALDO ACTUAL (Q)</th>
+                                    <th>USUARIO</th>
                                     <th>FECHA DE PAGO</th>
                                     <th>ACCIÓN</th>
                                 </tr>
@@ -467,8 +477,8 @@
                     // Convertir a JSON
                     const jsonData = XLSX.utils.sheet_to_json(worksheet);
                     
-                    // Validar las columnas requeridas
-                    const requiredColumns = ['CLIENTE', 'NOMBRE', 'CREDITO', 'MONTO ORIGINAL', 'FECHA DE PAGO'];
+                    // Validar las columnas requeridas (incluyendo SALDO ACTUAL y USUARIO)
+                    const requiredColumns = ['CLIENTE', 'NOMBRE', 'CREDITO', 'MONTO ORIGINAL', 'SALDO ACTUAL', 'USUARIO', 'FECHA DE PAGO'];
                     const firstRow = jsonData[0];
                     
                     if (!firstRow) {
@@ -637,7 +647,7 @@
             
             if (!data || data.length === 0) {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="6" style="text-align: center;">No hay datos para mostrar</td>`;
+                row.innerHTML = `<td colspan="8" style="text-align: center;">No hay datos para mostrar</td>`;
                 tableBody.appendChild(row);
                 return;
             }
@@ -675,6 +685,8 @@
                     <td>${item.NOMBRE || ''}</td>
                     <td>${numeroCredito}</td>
                     <td>${formatCurrency(item['MONTO ORIGINAL'])}</td>
+                    <td>${formatCurrency(item['SALDO ACTUAL'])}</td>
+                    <td>${item.USUARIO || ''}</td>
                     <td>${fechaPago || ''}</td>
                     <td><button class="copy-btn" data-credito="${numeroCredito}" data-nombre="${item.NOMBRE || ''}">Copiar</button></td>
                 `;
