@@ -1,753 +1,132 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestor de Créditos</title>
-    <style>
-        :root {
-            --primary-color: #4361ee;
-            --primary-hover: #3a56d4;
-            --secondary-color: #f72585;
-            --secondary-hover: #e01e7a;
-            --danger-color: #d00000;
-            --danger-hover: #b00000;
-            --border-color: #ced4da;
-            --light-bg: #f8f9fa;
-            --table-header-bg: #e9ecef;
-            --table-row-even: #f8f9fa;
-            --table-row-hover: #e2e6ea;
-            --success-bg: #d1e7dd;
-            --success-text: #0f5132;
-            --error-bg: #f8d7da;
-            --error-text: #842029;
-            --info-bg: #cff4fc;
-            --info-text: #055160;
-            --loading-bg: #fff3cd;
-            --loading-text: #664d03;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: var(--light-bg);
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        
-        .header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .logo {
-            max-width: 200px;
-            height: auto;
-            margin-bottom: 15px;
-        }
-        
-        h1 {
-            color: #333;
-            text-align: center;
-            margin: 0;
-        }
-        
-        .tab-section {
-            margin-bottom: 20px;
-        }
-        
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            background-color: #f1f1f1;
-            border: 1px solid var(--border-color);
-            border-bottom: none;
-            border-radius: 5px 5px 0 0;
-            margin-right: 5px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        
-        .tab.active {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-        
-        .tab-content {
-            display: none;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 0 0 5px 5px;
-            border: 1px solid var(--border-color);
-            border-top: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .upload-section, .search-section {
-            margin-bottom: 20px;
-        }
-        
-        input[type="file"], input[type="text"], button {
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s;
-        }
-        
-        button:hover {
-            background-color: var(--primary-hover);
-        }
-        
-        button.copy-btn {
-            background-color: var(--secondary-color);
-            padding: 5px 10px;
-            font-size: 12px;
-        }
-        
-        button.copy-btn:hover {
-            background-color: var(--secondary-hover);
-        }
-        
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        
-        button.clear-btn {
-            background-color: var(--danger-color);
-        }
-        
-        button.clear-btn:hover {
-            background-color: var(--danger-hover);
-        }
-        
-        .table-container {
-            overflow-x: auto;
-            margin-top: 20px;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 900px; /* Ajustado para más columnas */
-        }
-        
-        th, td {
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            text-align: left;
-        }
-        
-        th {
-            background-color: var(--table-header-bg);
-            position: sticky;
-            top: 0;
-        }
-        
-        tr:nth-child(even) {
-            background-color: var(--table-row-even);
-        }
-        
-        tr:hover {
-            background-color: var(--table-row-hover);
-        }
-        
-        .message {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-            display: none;
-        }
-        
-        .success {
-            background-color: var(--success-bg);
-            color: var(--success-text);
-            border: 1px solid #badbcc;
-        }
-        
-        .error {
-            background-color: var(--error-bg);
-            color: var(--error-text);
-            border: 1px solid #f5c2c7;
-        }
-        
-        .info {
-            background-color: var(--info-bg);
-            color: var(--info-text);
-            border: 1px solid #9eeaf9;
-        }
-        
-        .loading {
-            background-color: var(--loading-bg);
-            color: var(--loading-text);
-            border: 1px solid #ffecb5;
-        }
-        
-        .status-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-        
-        .status-green {
-            background-color: #28a745;
-        }
-        
-        .status-red {
-            background-color: #dc3545;
-        }
-        
-        .file-actions {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .file-actions button {
-            flex: 1 1 200px;
-        }
-        
-        .search-container {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .search-container input {
-            flex-grow: 1;
-            min-width: 200px;
-        }
-        
-        /* Estilos para móviles */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            .container {
-                padding: 15px;
-            }
-            
-            .tab-content {
-                padding: 15px;
-            }
-            
-            th, td {
-                padding: 8px;
-                font-size: 14px;
-            }
-            
-            .header {
-                margin-bottom: 15px;
-            }
-            
-            .logo {
-                max-width: 150px;
-            }
-            
-            h1 {
-                font-size: 24px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .file-actions button {
-                flex: 1 1 100%;
-            }
-            
-            .search-container button {
-                width: 100%;
-            }
-            
-            .tab {
-                padding: 8px 12px;
-                font-size: 14px;
-            }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gestor de Créditos Compartido</title>
+  <style>
+    :root{--azul:#243b78;--azul2:#3156c9;--rosa:#f72585;--fondo:#eef2f7;--borde:#d5dce6;--texto:#1f2937;--rojo:#b42318;--verde:#067647}
+    *{box-sizing:border-box}body{margin:0;background:var(--fondo);font-family:Arial,sans-serif;color:var(--texto)}
+    .wrap{max-width:1450px;margin:24px auto;padding:0 18px}.card{background:#fff;border-radius:14px;box-shadow:0 8px 28px #1d29390f;padding:24px}
+    header{text-align:center;margin-bottom:22px}.logo{max-width:220px;max-height:70px}h1{margin:10px 0 4px}h2{margin-top:0}.muted{color:#667085;font-size:14px}
+    .login{max-width:430px;margin:55px auto}.field{margin:14px 0}label{display:block;font-weight:700;margin-bottom:6px}
+    input,button{font:inherit;border-radius:8px;padding:11px 12px}input{width:100%;border:1px solid var(--borde)}button{border:0;background:var(--azul2);color:#fff;cursor:pointer;font-weight:700}button:hover{filter:brightness(.94)}button:disabled{opacity:.55;cursor:not-allowed}
+    .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0}.bar input{flex:1;min-width:240px}.secondary{background:#667085}.pink{background:var(--rosa)}.danger{background:var(--rojo)}
+    .tabs{display:flex;gap:8px;border-bottom:1px solid var(--borde);margin-bottom:20px}.tab{background:#e9edf5;color:#344054;border-radius:8px 8px 0 0}.tab.active{background:var(--azul2);color:#fff}.panel{display:none}.panel.active{display:block}
+    .notice{display:none;padding:12px;border-radius:8px;margin:12px 0}.notice.ok{display:block;background:#dcfae6;color:var(--verde)}.notice.err{display:block;background:#fee4e2;color:var(--rojo)}.notice.info{display:block;background:#e0f2fe;color:#075985}
+    .tablebox{overflow:auto;border:1px solid var(--borde);border-radius:8px}table{width:100%;border-collapse:collapse;min-width:1050px}th,td{padding:11px;border-bottom:1px solid var(--borde);text-align:left;white-space:nowrap}th{background:#eef2f6;position:sticky;top:0}tr:hover{background:#f8fafc}
+    .copy{background:var(--rosa);padding:7px 11px;font-size:13px}.pager{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px}.hidden{display:none!important}
+    .uploadbox{border:2px dashed var(--borde);padding:20px;border-radius:10px}.status{padding:10px;background:#f8fafc;border-radius:8px;margin-bottom:12px}
+    @media(max-width:650px){.wrap{margin:8px auto;padding:8px}.card{padding:15px}.pager{flex-wrap:wrap}.pager button{flex:1}}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <!-- Logo - se espera que esté en la carpeta images/logo.png -->
-            <img src="images/logo.png" alt="Logo" class="logo">
-            <h1>Gestor de Créditos</h1>
-        </div>
-        
-        <div class="tab-section">
-            <div class="tabs">
-                <div class="tab active" data-tab="search">Buscar Asociado</div>
-                <div class="tab" data-tab="upload">Cargar Datos</div>
-            </div>
-            
-            <div id="searchTab" class="tab-content active">
-                <div class="search-section">
-                    <h2>Buscar Asociado</h2>
-                    <div class="search-container">
-                        <input type="text" id="searchInput" placeholder="Escriba el nombre del asociado...">
-                        <button id="showAllBtn">Mostrar Todos</button>
-                    </div>
-                    <div id="searchMessage" class="message"></div>
-                </div>
-                
-                <div class="results-section">
-                    <h2>Resultados</h2>
-                    <div id="resultsCount" style="margin-bottom: 10px;"></div>
-                    <div class="table-container">
-                        <table id="dataTable">
-                            <thead>
-                                <tr>
-                                    <th>CLIENTE</th>
-                                    <th>NOMBRE</th>
-                                    <th>CRÉDITO</th>
-                                    <th>MONTO ORIGINAL (Q)</th>
-                                    <th>SALDO ACTUAL (Q)</th>
-                                    <th>USUARIO</th>
-                                    <th>FECHA DE PAGO</th>
-                                    <th>ACCIÓN</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody">
-                                <!-- Los datos se cargarán aquí -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="uploadTab" class="tab-content">
-                <div class="upload-section">
-                    <h2>Cargar Archivo Excel <span id="statusIndicator" class="status-indicator status-red"></span></h2>
-                    <input type="file" id="excelFile" accept=".xlsx, .xls">
-                    <button id="uploadBtn">Cargar Datos</button>
-                    <button id="clearBtn" class="clear-btn" disabled>Limpiar Datos</button>
-                    <div id="uploadMessage" class="message"></div>
-                    <div id="fileInfo" class="message info" style="display: none;"></div>
-                    <div class="file-actions">
-                        <button id="exportBtn" disabled>Exportar a Excel</button>
-                        <button id="saveBackupBtn" disabled>Guardar Backup</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<main class="wrap">
+  <section id="loginView" class="card login">
+    <header><img src="images/logo.png" class="logo" alt="Tonantel" onerror="this.style.display='none'"><h1>Gestor de Créditos</h1><div class="muted">Cartera compartida</div></header>
+    <div class="field"><label for="accessKey">Contraseña de consulta</label><input id="accessKey" type="password" autocomplete="current-password" placeholder="Ingrese la contraseña"></div>
+    <button id="loginBtn" style="width:100%">Ingresar</button><div id="loginMsg" class="notice"></div>
+  </section>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script>
-        // Variable para almacenar los datos cargados
-        let creditosData = [];
-        let isDataLoaded = false;
-        let currentFileName = '';
-        let searchTimeout = null;
-        
-        // Elementos del DOM
-        const excelFileInput = document.getElementById('excelFile');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const exportBtn = document.getElementById('exportBtn');
-        const saveBackupBtn = document.getElementById('saveBackupBtn');
-        const uploadMessage = document.getElementById('uploadMessage');
-        const fileInfo = document.getElementById('fileInfo');
-        const searchInput = document.getElementById('searchInput');
-        const showAllBtn = document.getElementById('showAllBtn');
-        const searchMessage = document.getElementById('searchMessage');
-        const tableBody = document.getElementById('tableBody');
-        const statusIndicator = document.getElementById('statusIndicator');
-        const resultsCount = document.getElementById('resultsCount');
-        const tabs = document.querySelectorAll('.tab');
-        const tabContents = document.querySelectorAll('.tab-content');
-        
-        // Cargar datos guardados al iniciar
-        document.addEventListener('DOMContentLoaded', function() {
-            loadSavedData();
-            
-            // Configurar eventos de las pestañas
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tabContents.forEach(c => c.classList.remove('active'));
-                    
-                    tab.classList.add('active');
-                    const tabId = tab.getAttribute('data-tab');
-                    document.getElementById(`${tabId}Tab`).classList.add('active');
-                });
-            });
-        });
-        
-        // Cargar datos guardados del localStorage
-        function loadSavedData() {
-            const savedData = localStorage.getItem('creditosData');
-            const savedFileInfo = localStorage.getItem('fileInfo');
-            
-            if (savedData) {
-                try {
-                    creditosData = JSON.parse(savedData);
-                    isDataLoaded = creditosData.length > 0;
-                    
-                    if (isDataLoaded) {
-                        statusIndicator.className = 'status-indicator status-green';
-                        clearBtn.disabled = false;
-                        exportBtn.disabled = false;
-                        saveBackupBtn.disabled = false;
-                        
-                        if (savedFileInfo) {
-                            fileInfo.innerHTML = savedFileInfo;
-                            fileInfo.style.display = 'block';
-                        }
-                        
-                        displayData(creditosData);
-                        updateResultsCount(creditosData.length);
-                        showMessage(uploadMessage, `Datos cargados desde el almacenamiento local. ${creditosData.length} registros encontrados.`, 'success');
-                    }
-                } catch (e) {
-                    console.error('Error al cargar datos guardados:', e);
-                    localStorage.removeItem('creditosData');
-                    localStorage.removeItem('fileInfo');
-                }
-            }
-        }
-        
-        // Guardar datos en localStorage
-        function saveDataToLocalStorage() {
-            localStorage.setItem('creditosData', JSON.stringify(creditosData));
-            
-            if (fileInfo.style.display !== 'none') {
-                localStorage.setItem('fileInfo', fileInfo.innerHTML);
-            }
-        }
-        
-        // Evento para cargar el archivo Excel
-        uploadBtn.addEventListener('click', function() {
-            const file = excelFileInput.files[0];
-            
-            if (!file) {
-                showMessage(uploadMessage, 'Por favor seleccione un archivo Excel.', 'error');
-                return;
-            }
-            
-            // Mostrar mensaje de carga
-            showMessage(uploadMessage, `Cargando archivo "${file.name}"...`, 'loading');
-            uploadBtn.disabled = true;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheetName];
-                    
-                    // Convertir a JSON
-                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
-                    
-                    // Validar las columnas requeridas (incluyendo SALDO ACTUAL y USUARIO)
-                    const requiredColumns = ['CLIENTE', 'NOMBRE', 'CREDITO', 'MONTO ORIGINAL', 'SALDO ACTUAL', 'USUARIO', 'FECHA DE PAGO'];
-                    const firstRow = jsonData[0];
-                    
-                    if (!firstRow) {
-                        showMessage(uploadMessage, 'El archivo no contiene datos válidos.', 'error');
-                        uploadBtn.disabled = false;
-                        return;
-                    }
-                    
-                    const missingColumns = requiredColumns.filter(col => !(col in firstRow));
-                    
-                    if (missingColumns.length > 0) {
-                        showMessage(uploadMessage, `Faltan columnas requeridas: ${missingColumns.join(', ')}`, 'error');
-                        uploadBtn.disabled = false;
-                        return;
-                    }
-                    
-                    // Almacenar los datos
-                    creditosData = jsonData;
-                    isDataLoaded = true;
-                    currentFileName = file.name;
-                    
-                    // Actualizar indicador de estado y botones
-                    statusIndicator.className = 'status-indicator status-green';
-                    clearBtn.disabled = false;
-                    exportBtn.disabled = false;
-                    saveBackupBtn.disabled = false;
-                    
-                    // Mostrar información del archivo cargado
-                    fileInfo.innerHTML = `
-                        <strong>Archivo cargado:</strong> ${currentFileName}<br>
-                        <strong>Registros:</strong> ${creditosData.length}<br>
-                        <strong>Fecha de carga:</strong> ${new Date().toLocaleString()}
-                    `;
-                    fileInfo.style.display = 'block';
-                    
-                    showMessage(uploadMessage, `Archivo "${file.name}" cargado correctamente. ${creditosData.length} registros encontrados.`, 'success');
-                    uploadBtn.disabled = false;
-                    
-                    // Guardar en localStorage
-                    saveDataToLocalStorage();
-                    
-                    // Mostrar todos los datos inicialmente
-                    displayData(creditosData);
-                    updateResultsCount(creditosData.length);
-                    
-                } catch (error) {
-                    showMessage(uploadMessage, `Error al procesar el archivo: ${error.message}`, 'error');
-                    console.error(error);
-                    uploadBtn.disabled = false;
-                }
-            };
-            reader.onerror = function() {
-                showMessage(uploadMessage, 'Error al leer el archivo.', 'error');
-                uploadBtn.disabled = false;
-            };
-            reader.readAsArrayBuffer(file);
-        });
-        
-        // Evento para limpiar los datos
-        clearBtn.addEventListener('click', function() {
-            if (confirm('¿Está seguro que desea limpiar todos los datos cargados?')) {
-                creditosData = [];
-                isDataLoaded = false;
-                currentFileName = '';
-                
-                // Actualizar UI
-                statusIndicator.className = 'status-indicator status-red';
-                clearBtn.disabled = true;
-                exportBtn.disabled = true;
-                saveBackupBtn.disabled = true;
-                fileInfo.style.display = 'none';
-                tableBody.innerHTML = '';
-                resultsCount.textContent = '';
-                searchInput.value = '';
-                
-                // Limpiar localStorage
-                localStorage.removeItem('creditosData');
-                localStorage.removeItem('fileInfo');
-                
-                // Limpiar input de archivo
-                excelFileInput.value = '';
-                
-                showMessage(uploadMessage, 'Todos los datos han sido eliminados.', 'success');
-            }
-        });
-        
-        // Evento para exportar a Excel
-        exportBtn.addEventListener('click', function() {
-            if (creditosData.length === 0) {
-                showMessage(uploadMessage, 'No hay datos para exportar.', 'error');
-                return;
-            }
-            
-            try {
-                const worksheet = XLSX.utils.json_to_sheet(creditosData);
-                const workbook = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(workbook, worksheet, "Creditos");
-                
-                // Generar nombre de archivo con fecha
-                const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-                const filename = `Creditos_${dateStr}.xlsx`;
-                
-                XLSX.writeFile(workbook, filename);
-                showMessage(uploadMessage, `Datos exportados correctamente a ${filename}`, 'success');
-            } catch (error) {
-                showMessage(uploadMessage, `Error al exportar: ${error.message}`, 'error');
-                console.error(error);
-            }
-        });
-        
-        // Evento para guardar backup
-        saveBackupBtn.addEventListener('click', function() {
-            saveDataToLocalStorage();
-            showMessage(uploadMessage, 'Backup de los datos guardado correctamente.', 'success');
-        });
-        
-        // Evento para mostrar todos los registros
-        showAllBtn.addEventListener('click', function() {
-            searchInput.value = '';
-            displayData(creditosData);
-            updateResultsCount(creditosData.length);
-            showMessage(searchMessage, 'Mostrando todos los registros.', 'info');
-        });
-        
-        // Evento para búsqueda en tiempo real con debounce
-        searchInput.addEventListener('input', function() {
-            // Limpiar timeout anterior si existe
-            if (searchTimeout) {
-                clearTimeout(searchTimeout);
-            }
-            
-            // Configurar nuevo timeout para ejecutar la búsqueda después de 300ms
-            searchTimeout = setTimeout(() => {
-                const searchTerm = this.value.trim().toLowerCase();
-                
-                if (searchTerm === '') {
-                    displayData(creditosData);
-                    updateResultsCount(creditosData.length);
-                    showMessage(searchMessage, 'Mostrando todos los registros.', 'info');
-                    return;
-                }
-                
-                if (creditosData.length === 0) {
-                    showMessage(searchMessage, 'No hay datos cargados para buscar. Por favor cargue un archivo primero.', 'error');
-                    return;
-                }
-                
-                const filteredData = creditosData.filter(item => 
-                    item.NOMBRE && item.NOMBRE.toLowerCase().includes(searchTerm)
-                );
-                
-                if (filteredData.length === 0) {
-                    showMessage(searchMessage, 'No se encontraron coincidencias.', 'error');
-                } else {
-                    showMessage(searchMessage, `Se encontraron ${filteredData.length} coincidencias.`, 'success');
-                }
-                
-                displayData(filteredData);
-                updateResultsCount(filteredData.length);
-            }, 300); // 300ms de retraso
-        });
-        
-        // Función para mostrar datos en la tabla
-        function displayData(data) {
-            tableBody.innerHTML = '';
-            
-            if (!data || data.length === 0) {
-                const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="8" style="text-align: center;">No hay datos para mostrar</td>`;
-                tableBody.appendChild(row);
-                return;
-            }
-            
-            data.forEach(item => {
-                const row = document.createElement('tr');
-                
-                // Formatear fecha si es necesario
-                let fechaPago = item['FECHA DE PAGO'];
-                if (fechaPago instanceof Date) {
-                    fechaPago = fechaPago.toLocaleDateString();
-                } else if (typeof fechaPago === 'string' || typeof fechaPago === 'number') {
-                    // Intentar convertir fechas en formato Excel (número de días desde 1900)
-                    const excelEpoch = new Date(1899, 11, 30);
-                    const days = parseInt(fechaPago);
-                    if (!isNaN(days)) {
-                        const date = new Date(excelEpoch.getTime() + days * 24 * 60 * 60 * 1000);
-                        fechaPago = date.toLocaleDateString();
-                    }
-                }
-                
-                // Formatear número de crédito con guiones si es necesario
-                let numeroCredito = item.CREDITO || '';
-                if (typeof numeroCredito === 'string') {
-                    // Eliminar espacios y guiones existentes
-                    let cleanNumber = numeroCredito.replace(/\s+/g, '').replace(/-/g, '');
-                    // Aplicar formato 111-0000-0065-3577 si tiene 12 dígitos
-                    if (/^\d{12}$/.test(cleanNumber)) {
-                        numeroCredito = `${cleanNumber.substring(0, 3)}-${cleanNumber.substring(3, 7)}-${cleanNumber.substring(7, 11)}-${cleanNumber.substring(11)}`;
-                    }
-                }
-                
-                row.innerHTML = `
-                    <td>${item.CLIENTE || ''}</td>
-                    <td>${item.NOMBRE || ''}</td>
-                    <td>${numeroCredito}</td>
-                    <td>${formatCurrency(item['MONTO ORIGINAL'])}</td>
-                    <td>${formatCurrency(item['SALDO ACTUAL'])}</td>
-                    <td>${item.USUARIO || ''}</td>
-                    <td>${fechaPago || ''}</td>
-                    <td><button class="copy-btn" data-credito="${numeroCredito}" data-nombre="${item.NOMBRE || ''}">Copiar</button></td>
-                `;
-                
-                tableBody.appendChild(row);
-            });
-            
-            // Agregar eventos a los botones de copiar
-            document.querySelectorAll('.copy-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const credito = this.getAttribute('data-credito');
-                    const nombre = this.getAttribute('data-nombre');
-                    const textToCopy = `CREDITO ${credito} ${nombre}`;
-                    
-                    navigator.clipboard.writeText(textToCopy).then(() => {
-                        this.textContent = '¡Copiado!';
-                        setTimeout(() => {
-                            this.textContent = 'Copiar';
-                        }, 2000);
-                    }).catch(err => {
-                        console.error('Error al copiar: ', err);
-                    });
-                });
-            });
-        }
-        
-        // Función para actualizar el contador de resultados
-        function updateResultsCount(count) {
-            if (!isDataLoaded) {
-                resultsCount.textContent = '';
-                return;
-            }
-            resultsCount.textContent = `Mostrando ${count} de ${creditosData.length} registros`;
-        }
-        
-        // Función para formatear moneda en Quetzales (Q)
-        function formatCurrency(value) {
-            if (value === undefined || value === null) return '';
-            const num = typeof value === 'string' ? parseFloat(value.replace(/[^0-9.-]/g, '')) : value;
-            if (isNaN(num)) return '';
-            
-            return new Intl.NumberFormat('es-GT', { 
-                style: 'currency', 
-                currency: 'GTQ',
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }).format(num).replace('GTQ', 'Q');
-        }
-        
-        // Función para mostrar mensajes
-        function showMessage(element, text, type) {
-            element.textContent = text;
-            element.className = `message ${type}`;
-            element.style.display = 'block';
-            
-            if (type !== 'loading') {
-                setTimeout(() => {
-                    element.style.display = 'none';
-                }, 5000);
-            }
-        }
-    </script>
+  <section id="appView" class="card hidden">
+    <header><img src="images/logo.png" class="logo" alt="Tonantel" onerror="this.style.display='none'"><h1>Gestor de Créditos</h1><div id="lastUpdate" class="muted">Consultando actualización…</div></header>
+    <div class="tabs"><button class="tab active" data-panel="searchPanel">Buscar asociado</button><button class="tab" data-panel="uploadPanel">Administrar cartera</button><button id="logoutBtn" class="secondary" style="margin-left:auto">Salir</button></div>
+    <section id="searchPanel" class="panel active">
+      <div class="bar"><input id="searchInput" placeholder="Buscar por nombre, crédito o cliente…"><button id="searchBtn">Buscar</button><button id="allBtn" class="secondary">Mostrar todos</button></div>
+      <div id="searchMsg" class="notice"></div><div id="count" class="muted" style="margin:10px 0"></div>
+      <div class="tablebox"><table><thead><tr><th>CLIENTE</th><th>NOMBRE</th><th>CRÉDITO</th><th>MONTO ORIGINAL</th><th>SALDO ACTUAL</th><th>USUARIO</th><th>FECHA DE PAGO</th><th>ACCIÓN</th></tr></thead><tbody id="tbody"></tbody></table></div>
+      <div class="pager"><button id="prevBtn" class="secondary">Anterior</button><span id="pageInfo"></span><button id="nextBtn" class="secondary">Siguiente</button></div>
+    </section>
+    <section id="uploadPanel" class="panel">
+      <div class="uploadbox"><h2>Cargar nueva cartera</h2><p class="muted">La nueva carga reemplazará completamente la cartera anterior. Se conserva toda la información de cada fila.</p>
+        <div class="field"><label for="adminKey">Clave administrativa</label><input id="adminKey" type="password" autocomplete="off"></div>
+        <div class="field"><label for="excelFile">Archivo Excel</label><input id="excelFile" type="file" accept=".xlsx,.xls,.xlsb"></div>
+        <button id="uploadBtn">Procesar y reemplazar cartera</button><div id="uploadMsg" class="notice"></div>
+      </div>
+    </section>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+  // 1) Cree su proyecto en Supabase. 2) Pegue aquí Project URL y anon public key.
+  const SUPABASE_URL = 'https://ajcuuizsvsanxpxpnmdh.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_6guWHhdjDG3i-BFGx0JfQQ_BUSDteUA';
+  const PAGE_SIZE = 50;
+
+  const $ = id => document.getElementById(id);
+  let db = null, accessKey = '', page = 0, total = 0, currentSearch = '';
+  const required = ['CLIENTE','NOMBRE','CREDITO','MONTO ORIGINAL','SALDO ACTUAL','USUARIO','FECHA DE PAGO'];
+
+  function message(id,text,type='info'){const el=$(id);el.textContent=text;el.className='notice '+type}
+  function hideMessage(id){$(id).className='notice'}
+  function configured(){return SUPABASE_URL.startsWith('https://') && !SUPABASE_URL.includes('PEGUE_') && !SUPABASE_ANON_KEY.includes('PEGUE_')}
+  function client(headers={}){return supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{global:{headers}})}
+  function clean(v){return v===undefined||v===null?'':String(v).trim()}
+  function money(v){const n=Number(v);return Number.isFinite(n)?new Intl.NumberFormat('es-GT',{style:'currency',currency:'GTQ'}).format(n).replace('GTQ','Q'):''}
+  function creditFormat(v){const s=clean(v).replace(/[\s-]/g,'');return /^\d{14}$/.test(s)?`${s.slice(0,3)}-${s.slice(3,7)}-${s.slice(7,11)}-${s.slice(11)}`:clean(v)}
+  function excelDate(v){if(typeof v==='number'&&v>20000){const d=XLSX.SSF.parse_date_code(v);return d?`${String(d.d).padStart(2,'0')}/${String(d.m).padStart(2,'0')}/${d.y}`:clean(v)}return clean(v)}
+  function normalizeHeader(h){return clean(h).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ')}
+  function escapeLike(v){return v.replace(/[%,]/g,' ').trim()}
+
+  async function login(){
+    hideMessage('loginMsg'); accessKey=$('accessKey').value.trim();
+    if(!configured()) return message('loginMsg','Primero debe configurar la conexión con Supabase dentro del archivo index.html.','err');
+    if(!accessKey) return message('loginMsg','Ingrese la contraseña de consulta.','err');
+    $('loginBtn').disabled=true; db=client({'x-clave-gestor':accessKey});
+    const {data,error}=await db.from('estado_cartera').select('*').eq('id',1).maybeSingle();
+    $('loginBtn').disabled=false;
+    if(error||!data){db=null;return message('loginMsg','Contraseña incorrecta o no fue posible conectar.','err')}
+    sessionStorage.setItem('gestorKey',accessKey); $('loginView').classList.add('hidden'); $('appView').classList.remove('hidden');
+    setStatus(data); await loadRows();
+  }
+
+  function setStatus(s){$('lastUpdate').textContent=s&&s.actualizado_at?`Última actualización: ${new Date(s.actualizado_at).toLocaleString('es-GT')} · ${s.total_registros} registros · ${s.archivo||''}`:'Sin cartera cargada'}
+  async function refreshStatus(){const {data}=await db.from('estado_cartera').select('*').eq('id',1).maybeSingle();if(data)setStatus(data)}
+
+  async function loadRows(){
+    $('tbody').innerHTML='<tr><td colspan="8">Cargando…</td></tr>'; hideMessage('searchMsg');
+    const from=page*PAGE_SIZE,to=from+PAGE_SIZE-1; let q=db.from('cartera_creditos').select('cliente,nombre,credito,monto_original,saldo_actual,usuario,fecha_pago',{count:'exact'});
+    if(currentSearch){const s=escapeLike(currentSearch);q=q.or(`nombre.ilike.%${s}%,credito.ilike.%${s}%,cliente.ilike.%${s}%`)}
+    const {data,error,count}=await q.order('nombre').range(from,to);
+    if(error){$('tbody').innerHTML='';return message('searchMsg','No fue posible consultar la cartera. Verifique la conexión.','err')}
+    total=count||0; render(data||[]); updatePager();
+  }
+
+  function render(rows){
+    const body=$('tbody'); body.innerHTML='';
+    if(!rows.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=8;td.textContent='No se encontraron registros';tr.appendChild(td);body.appendChild(tr);return}
+    rows.forEach(r=>{const tr=document.createElement('tr');[r.cliente,r.nombre,creditFormat(r.credito),money(r.monto_original),money(r.saldo_actual),r.usuario,r.fecha_pago].forEach(v=>{const td=document.createElement('td');td.textContent=clean(v);tr.appendChild(td)});const td=document.createElement('td'),b=document.createElement('button');b.className='copy';b.textContent='Copiar';b.onclick=()=>copyCredit(b,r.credito,r.nombre);td.appendChild(b);tr.appendChild(td);body.appendChild(tr)})
+  }
+  async function copyCredit(btn,credito,nombre){const text=`CREDITO ${creditFormat(credito)} ${clean(nombre)}`;try{await navigator.clipboard.writeText(text);btn.textContent='¡Copiado!';setTimeout(()=>btn.textContent='Copiar',1600)}catch{message('searchMsg','No fue posible copiar automáticamente.','err')}}
+  function updatePager(){const pages=Math.max(1,Math.ceil(total/PAGE_SIZE));$('count').textContent=`${total} registro${total===1?'':'s'} encontrado${total===1?'':'s'}`;$('pageInfo').textContent=`Página ${page+1} de ${pages}`;$('prevBtn').disabled=page===0;$('nextBtn').disabled=page+1>=pages}
+
+  async function upload(){
+    hideMessage('uploadMsg');const file=$('excelFile').files[0],admin=$('adminKey').value.trim();
+    if(!admin)return message('uploadMsg','Ingrese la clave administrativa.','err');if(!file)return message('uploadMsg','Seleccione un archivo Excel.','err');
+    $('uploadBtn').disabled=true;message('uploadMsg','Procesando archivo…','info');
+    try{
+      const buffer=await file.arrayBuffer(),wb=XLSX.read(buffer,{type:'array',cellDates:false}),ws=wb.Sheets[wb.SheetNames[0]];
+      let rows=XLSX.utils.sheet_to_json(ws,{defval:'',raw:true});if(!rows.length)throw new Error('El archivo no contiene registros.');
+      const receivedHeaders=new Set(Object.keys(rows[0]).map(normalizeHeader));
+      const missing=required.filter(k=>!receivedHeaders.has(k));if(missing.length)throw new Error('Faltan columnas: '+missing.join(', '));
+      rows=rows.map(original=>{const normalized={};Object.entries(original).forEach(([k,v])=>normalized[normalizeHeader(k)]=v);normalized['FECHA DE PAGO']=excelDate(normalized['FECHA DE PAGO']);return normalized});
+      if(!confirm(`Se reemplazará la cartera actual con ${rows.length} registros. ¿Desea continuar?`)){ $('uploadBtn').disabled=false;return hideMessage('uploadMsg') }
+      const adminDb=client({'x-clave-admin':admin});const {data,error}=await adminDb.rpc('reemplazar_cartera',{p_filas:rows,p_archivo:file.name});if(error)throw error;
+      message('uploadMsg',`Cartera actualizada correctamente: ${data} registros.`,`ok`);page=0;currentSearch='';$('searchInput').value='';await refreshStatus();await loadRows();
+    }catch(e){message('uploadMsg','No se pudo cargar: '+(e.message||e),'err')}finally{$('uploadBtn').disabled=false}
+  }
+
+  $('loginBtn').onclick=login;$('accessKey').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
+  $('logoutBtn').onclick=()=>{sessionStorage.removeItem('gestorKey');location.reload()};
+  $('searchBtn').onclick=()=>{currentSearch=$('searchInput').value.trim();page=0;loadRows()};
+  $('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('searchBtn').click()});
+  $('allBtn').onclick=()=>{$('searchInput').value='';currentSearch='';page=0;loadRows()};
+  $('prevBtn').onclick=()=>{if(page>0){page--;loadRows()}};$('nextBtn').onclick=()=>{if((page+1)*PAGE_SIZE<total){page++;loadRows()}};
+  $('uploadBtn').onclick=upload;
+  document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');$(t.dataset.panel).classList.add('active')});
+  const saved=sessionStorage.getItem('gestorKey');if(saved){$('accessKey').value=saved;login()}
+</script>
 </body>
 </html>
