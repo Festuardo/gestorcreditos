@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Panel | Gestor de Créditos</title><link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><img src="images/logo.png" alt="Logo"><div><small>Panel de trabajo</small><strong>Gestor de Créditos</strong></div></div>
+    <div class="session"><span id="roleBadge">Verificando…</span><button id="logoutBtn" class="button ghost">Salir</button></div>
+  </header>
+  <main class="shell">
+    <section class="summary">
+      <article><span>Estado</span><strong id="statusText">Consultando…</strong></article>
+      <article><span>Registros</span><strong id="totalRecords">0</strong></article>
+      <article><span>Archivo actual</span><strong id="currentFile">Sin información</strong></article>
+    </section>
+    <section class="workspace">
+      <nav class="tabs"><button class="tab active" data-panel="searchPanel">Buscar asociados</button><button id="adminTab" class="tab" data-panel="adminPanel" hidden>Administrar cartera</button></nav>
+      <section id="searchPanel" class="panel active">
+        <div class="heading"><div><small>Consulta</small><h1>Buscar asociado</h1></div><p>Busca por nombre, número de crédito o código de cliente.</p></div>
+        <div class="search"><input id="searchInput" type="search" placeholder="Escribe nombre, crédito o cliente…"><button id="searchBtn" class="button primary">Buscar</button><button id="allBtn" class="button secondary">Mostrar todos</button></div>
+        <div id="searchMessage" class="message"></div><div id="resultsCount" class="results-count"></div>
+        <div class="tablebox"><table><thead><tr><th>Cliente</th><th>Nombre</th><th>Crédito</th><th>Monto original</th><th>Saldo actual</th><th>Usuario</th><th>Fecha de pago</th><th>Acción</th></tr></thead><tbody id="tbody"><tr><td colspan="8" class="empty">Cargando…</td></tr></tbody></table></div>
+        <div class="pager"><button id="prevBtn" class="button secondary">Anterior</button><span id="pageInfo"></span><button id="nextBtn" class="button secondary">Siguiente</button></div>
+      </section>
+      <section id="adminPanel" class="panel">
+        <div class="heading"><div><small>Administración</small><h1>Reemplazar cartera</h1></div><p>La operación se ejecuta de manera transaccional en Supabase.</p></div>
+        <div class="upload">
+          <div class="template-row"><div><strong>Plantilla oficial</strong><span>Incluye encabezados, formatos e instrucciones de llenado.</span></div><a class="button secondary" href="plantillas/Plantilla_Cartera_Creditos.xlsx" download>Descargar plantilla</a></div>
+          <label for="excelFile"><strong>Seleccionar archivo Excel</strong><span>.xlsx, .xls o .xlsb</span></label>
+          <input id="excelFile" type="file" accept=".xlsx,.xls,.xlsb">
+          <button id="uploadBtn" class="button primary">Procesar y reemplazar cartera</button>
+        </div>
+        <div id="uploadMessage" class="message"></div>
+      </section>
+    </section>
+  </main>
+  <footer class="app-footer">© 2026 Fgarcia. Todos los derechos reservados.</footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="js/config.js"></script><script src="js/gestor.js" defer></script>
+</body>
+</html>
