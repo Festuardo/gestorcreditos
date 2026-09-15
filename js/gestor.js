@@ -2,7 +2,7 @@ const PAGE_SIZE = 50;
 const REQUIRED = ['CLIENTE','NOMBRE','CREDITO','MONTO ORIGINAL','SALDO ACTUAL','USUARIO','FECHA DE PAGO'];
 const db = supabase.createClient(APP_CONFIG.supabaseUrl, APP_CONFIG.supabaseKey);
 const $ = id => document.getElementById(id);
-let page = 0, total = 0, searchTerm = '', role = '';
+let page = 0, total = 0, searchTerm = '', role = '', searchTimer, loadRequestId = 0;
 
 document.addEventListener('DOMContentLoaded', initialize);
 
@@ -28,9 +28,17 @@ function configureEvents() {
     tab.classList.add('active'); $(tab.dataset.panel).classList.add('active');
   }));
   $('logoutBtn').onclick = async () => { await db.auth.signOut(); window.location.replace('index.html'); };
-  $('searchBtn').onclick = () => { searchTerm = $('searchInput').value.trim(); page = 0; loadRows(); };
+  $('searchBtn').onclick = () => { clearTimeout(searchTimer); searchTerm = $('searchInput').value.trim(); page = 0; loadRows(); };
+  $('searchInput').addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      searchTerm = $('searchInput').value.trim();
+      page = 0;
+      loadRows();
+    }, 350);
+  });
   $('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('searchBtn').click(); });
-  $('allBtn').onclick = () => { $('searchInput').value = ''; searchTerm = ''; page = 0; loadRows(); };
+  $('allBtn').onclick = () => { clearTimeout(searchTimer); $('searchInput').value = ''; searchTerm = ''; page = 0; loadRows(); };
   $('prevBtn').onclick = () => { if (page > 0) { page--; loadRows(); } };
   $('nextBtn').onclick = () => { if ((page + 1) * PAGE_SIZE < total) { page++; loadRows(); } };
   $('uploadBtn').onclick = uploadPortfolio;
@@ -48,6 +56,7 @@ async function loadStatus() {
 }
 
 async function loadRows() {
+  const requestId = ++loadRequestId;
   $('tbody').innerHTML = '<tr><td colspan="8" class="empty">Cargando…</td></tr>';
   const from = page * PAGE_SIZE, to = from + PAGE_SIZE - 1;
   let query = db.from('cartera_creditos').select('cliente,nombre,credito,monto_original,saldo_actual,usuario,fecha_pago', {count: 'exact'});
@@ -56,6 +65,7 @@ async function loadRows() {
     query = query.or(`nombre.ilike.%${safe}%,credito.ilike.%${safe}%,cliente.ilike.%${safe}%`);
   }
   const {data, error, count} = await query.order('nombre').range(from, to);
+  if (requestId !== loadRequestId) return;
   if (error) return showMessage('searchMessage', `No fue posible consultar la cartera: ${error.message}`, 'error');
   total = count || 0; renderRows(data || []); updatePager();
 }
