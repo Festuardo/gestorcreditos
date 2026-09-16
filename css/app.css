@@ -42,7 +42,8 @@ th,td{padding:12px 13px;border-bottom:1px solid #e8ecf2;text-align:left;white-sp
 th{background:#f3f6fa;color:#475467;font-size:.74rem;text-transform:uppercase}
 tbody tr:hover{background:#f8fbff}
 .empty{text-align:center;color:var(--muted);padding:34px}
-.copy{border:0;border-radius:8px;padding:7px 11px;background:var(--pink);color:#fff;cursor:pointer}
+.whatsapp{border:0;border-radius:8px;padding:7px 11px;background:#25d366;color:#fff;font-weight:750;cursor:pointer}
+.whatsapp:hover{background:#1da851}
 .pager{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
 .upload{display:grid;gap:14px;padding:22px;border:1px dashed #9aabc3;border-radius:14px;background:#f8fafc}
 .upload label span{display:block;margin-top:5px;color:var(--muted);font-size:.84rem}
@@ -81,7 +82,7 @@ tbody tr:hover{background:#f8fbff}
   tbody td::before{content:attr(data-label);flex:0 0 38%;color:var(--muted);font-size:.72rem;font-weight:800;text-align:left;text-transform:uppercase}
   .empty{display:block!important;padding:24px!important;text-align:center!important}
   .empty::before{display:none}
-  .copy{min-width:95px}
+  .whatsapp{min-width:105px}
   .pager{position:sticky;bottom:8px;padding:8px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.96);box-shadow:0 5px 18px rgba(23,52,95,.12)}
   .upload{padding:16px 12px}
   .template-row{align-items:stretch;flex-direction:column}
