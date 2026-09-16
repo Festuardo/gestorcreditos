@@ -1,5 +1,6 @@
 :root{--navy:#17345f;--blue:#315fd1;--blue2:#244ba7;--pink:#e72c7e;--ink:#182230;--muted:#667085;--line:#d8dee8;--bg:#f2f5f9;--white:#fff;--danger:#b42318;--green:#087443}
 *{box-sizing:border-box}
+html{background:var(--bg)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
 .topbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:12px max(20px,calc((100vw - 1380px)/2));border-bottom:1px solid var(--line);background:rgba(255,255,255,.95);backdrop-filter:blur(10px)}
 .brand,.session{display:flex;align-items:center;gap:14px}
@@ -57,6 +58,7 @@ tbody tr:hover{background:#f8fbff}
 .pager .button{flex:1}
 }
 .app-footer{padding:0 20px 24px;color:var(--muted);font-size:.76rem;text-align:center}
+.pwa-install{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:30;border:0;border-radius:999px;padding:12px 18px;background:var(--navy);color:#fff;box-shadow:0 10px 30px rgba(23,52,95,.28);font:inherit;font-weight:800;cursor:pointer}
 @media(max-width:760px){
   .topbar{padding:10px 12px}
   .brand strong{font-size:.9rem}
