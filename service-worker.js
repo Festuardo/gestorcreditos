@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gestor-creditos-v2';
+const CACHE_NAME = 'gestor-creditos-v3';
 const APP_SHELL = [
   './',
   './index.html',
