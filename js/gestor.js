@@ -80,8 +80,11 @@ function renderRows(rows) {
       const td = document.createElement('td'); td.dataset.label = labels[index]; td.textContent = value ?? ''; tr.appendChild(td);
     });
     const td = document.createElement('td'), button = document.createElement('button');
-    button.className = 'copy'; button.textContent = 'Copiar';
-    button.onclick = async () => { await navigator.clipboard.writeText(`CREDITO ${formatCredit(item.credito)} ${item.nombre || ''}`); button.textContent = '¡Copiado!'; setTimeout(() => button.textContent = 'Copiar', 1500); };
+    button.className = 'whatsapp'; button.textContent = 'WhatsApp';
+    button.onclick = () => {
+      const message = `CREDITO ${formatCredit(item.credito)} ${item.nombre || ''}`;
+      window.location.href = `whatsapp://send?phone=50231172905&text=${encodeURIComponent(message)}`;
+    };
     td.dataset.label = 'Acción'; td.appendChild(button); tr.appendChild(td); body.appendChild(tr);
   });
 }
